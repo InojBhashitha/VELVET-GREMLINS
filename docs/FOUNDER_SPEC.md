@@ -1,6 +1,6 @@
 # Velvet Gremlin #000 — Founder
 
-> Specification Document v1.0
+> Specification Document v1.1
 > Last updated: 2026-09-06
 
 ---
@@ -13,7 +13,8 @@
 | **Edition** | 1/1 |
 | **Role** | Founder / Genesis character of the Velvet Gremlins project |
 | **Type** | Unique personal Founder piece |
-| **Status** | Phase 1 — Artwork preserved, pre-mint |
+| **Blockchain** | TON (The Open Network) |
+| **Status** | Phase 2 — Architecture planned, pre-implementation |
 
 ---
 
@@ -75,22 +76,34 @@ This is the **genesis character** of the entire Velvet Gremlins collection. As a
 
 ## Artwork Files
 
+### Production Assets (PNG — Preferred)
+
 | File | Location | Purpose |
 |---|---|---|
-| **Original** | `assets/founder/original/velvet-gremlin-000-founder-original.jpg` | Untouched source artwork — never modify |
-| **Clean** | `assets/founder/clean/velvet-gremlin-000-founder-clean.jpg` | Production copy for NFT preparation |
-| **Reference** | `assets/founder/references/velvet-gremlin-000-founder-reference.jpg` | Quick-access reference for artists |
+| **Master PNG** | `assets/founder/original/velvet-gremlin-000-founder.png` | Lossless master with transparency — primary source |
+| **Clean PNG** | `assets/founder/clean/velvet-gremlin-000-founder.png` | Production copy for NFT preparation |
+| **Collection PNG** | `collection/artwork/velvet-gremlin-000-founder.png` | Mint-ready artwork |
+
+### Archival / Reference Assets (JPEG)
+
+| File | Location | Purpose |
+|---|---|---|
+| **Original JPEG** | `assets/founder/original/velvet-gremlin-000-founder-original.jpg` | Historical — original Phase 1 JPEG master |
+| **Reference JPEG** | `assets/founder/references/velvet-gremlin-000-founder-reference.jpg` | Quick-access reference (white bg) |
+| **Dark BG Reference** | `assets/founder/references/velvet-gremlin-000-founder-dark-bg.jpg` | Reference on dark background |
+| **Reference PNG** | `assets/founder/references/velvet-gremlin-000-founder.png` | PNG reference copy |
 
 ### Artwork Specifications
 
-| Property | Value |
-|---|---|
-| **Format** | JPEG |
-| **Dimensions** | 1024 × 1024 px |
-| **Aspect Ratio** | 1:1 (square) |
-| **File Size** | ~370 KB |
-| **Background** | White (transparent-ready for future processing) |
-| **Quality** | Maximum available — source file preserved without recompression |
+| Property | PNG Master | JPEG Archive |
+|---|---|---|
+| **Format** | PNG (lossless, RGBA) | JPEG |
+| **Dimensions** | 1254 × 1254 px | 1024 × 1024 px |
+| **Color depth** | 32-bit RGBA (with alpha) | 24-bit RGB |
+| **Background** | Transparent (alpha channel) | White |
+| **File Size** | ~2.7 MB | ~370 KB |
+| **Aspect Ratio** | 1:1 (square) | 1:1 (square) |
+| **Quality** | Lossless | JPEG compressed |
 
 ---
 
@@ -104,21 +117,35 @@ This is the **genesis character** of the entire Velvet Gremlins collection. As a
 
 ---
 
-## Future Blockchain Metadata (Placeholder Structure)
+## Blockchain Configuration (Confirmed)
 
-The following fields will be populated during Phase 2 (blockchain integration). They are listed here for planning purposes only.
+The following parameters are confirmed for the Founder NFT:
+
+| Field | Value |
+|---|---|
+| **Blockchain** | TON (The Open Network) |
+| **Standards** | TEP-62 (NFT), TEP-64 (Metadata), TEP-66 (Royalty) |
+| **Collection** | Velvet Gremlins |
+| **Item Index** | 0 |
+| **Royalty** | 5% (numerator=50, denominator=1000) |
+| **Metadata storage** | Off-chain (IPFS/Arweave — URI TBD) |
+| **Creator** | `<PLACEHOLDER: Awaiting user input>` |
+| **Marketplace** | Getgems (getgems.io) |
+
+The following will be populated at deployment/mint time with real values:
 
 ```
-Token ID:          [To be assigned at mint]
-Contract Address:  [To be deployed]
-Collection:        Velvet Gremlins
-Chain:             [To be determined]
-Mint Date:         [To be determined]
-Creator:           [To be specified]
-Royalty:           [To be determined]
+Token ID:          [Assigned at mint — index 0]
+Collection Address:[Generated at collection deployment]
+Item Address:      [Generated at item mint]
+Owner Address:     [Deployer wallet — to be confirmed]
+Royalty Destination:[To be confirmed — may match owner]
+Mint Date:         [Actual date of mainnet mint]
+Image URI:         [IPFS/Arweave URI after upload]
+Metadata URI:      [IPFS/Arweave URI after upload]
 ```
 
-> **Note:** No fake addresses, token IDs, or marketplace links have been generated. These fields will be populated with real values during the blockchain integration phase.
+> **Note:** No fake addresses, token IDs, or marketplace links have been generated. All on-chain identifiers will be real values produced during actual deployment.
 
 ---
 
@@ -129,5 +156,7 @@ Royalty:           [To be determined]
 | Character concept created | Pre-Phase 1 | ✅ Complete |
 | Artwork generated | Pre-Phase 1 | ✅ Complete |
 | Phase 1 — Project structure & preservation | 2026-09-06 | ✅ Complete |
-| Phase 2 — Blockchain integration | TBD | ⏳ Pending |
-| Phase 3 — Minting | TBD | ⏳ Pending |
+| Phase 2 — Architecture & preparation | 2026-09-06 | ✅ Complete |
+| Phase 2 — Contract implementation | TBD | ⏳ Pending |
+| Phase 2 — Testnet deployment & verification | TBD | ⏳ Pending |
+| Phase 3 — Mainnet deployment & minting | TBD | ⏳ Pending |

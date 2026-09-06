@@ -1,0 +1,9 @@
+{
+  "name": "Velvet Gremlins",
+  "description": "Premium digital collectibles — mischievous cosmic creatures from the dark celestial realm. Each Velvet Gremlin is a unique character adorned in celestial gold and cosmic amethyst.",
+  "image": "<PLACEHOLDER: Replace with collection cover image URI (IPFS/Arweave) before deployment>",
+  "cover_image": "<PLACEHOLDER: Replace with collection banner/cover image URI>",
+  "social_links": [],
+  "marketplace": "getgems.io",
+  "creator": "<PLACEHOLDER: Replace with creator/artist name before deployment>"
+}
