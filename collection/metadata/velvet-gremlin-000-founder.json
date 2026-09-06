@@ -1,0 +1,68 @@
+{
+  "name": "Velvet Gremlin #000 — Founder",
+  "description": "The genesis character of the Velvet Gremlins collection. A 1/1 unique Founder piece — a mischievous cosmic creature adorned in royal gold and celestial amethyst, wrapped in a cloak of dark velvet embroidered with constellations. The Founder stands as the origin point and canonical reference for all Velvet Gremlins to follow.",
+  "edition": "1/1",
+  "image": "velvet-gremlin-000-founder-clean.jpg",
+  "attributes": [
+    {
+      "trait_type": "Number",
+      "value": "#000"
+    },
+    {
+      "trait_type": "Role",
+      "value": "Founder"
+    },
+    {
+      "trait_type": "Edition",
+      "value": "1/1"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Black-Purple Velvet"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Galaxy Violet"
+    },
+    {
+      "trait_type": "Crown",
+      "value": "Gold Royal Crown with Amethyst"
+    },
+    {
+      "trait_type": "Horns",
+      "value": "Curved Gold"
+    },
+    {
+      "trait_type": "Ears",
+      "value": "Large Starry Purple with Gold Jewelry"
+    },
+    {
+      "trait_type": "Pendant",
+      "value": "Gold Celestial Compass Rose"
+    },
+    {
+      "trait_type": "Cloak",
+      "value": "Dark Purple Royal with Gold Filigree"
+    },
+    {
+      "trait_type": "Fur Trim",
+      "value": "Ivory White"
+    },
+    {
+      "trait_type": "Tail",
+      "value": "Fluffy Curled with Gold Charm"
+    },
+    {
+      "trait_type": "Special Element",
+      "value": "Floating Purple Crystal Halo"
+    },
+    {
+      "trait_type": "Fangs",
+      "value": "Tiny"
+    },
+    {
+      "trait_type": "Theme",
+      "value": "Cosmic Celestial Royalty"
+    }
+  ]
+}
