@@ -9,11 +9,11 @@
 
 ### Artwork
 
-- [ ] **Final artwork format decided** — PNG with transparency (preferred) or current JPEG
-- [ ] **Final artwork file prepared** — Production copy in `collection/artwork/`
-- [ ] **Artwork uploaded to IPFS/Arweave** — Permanent, pinned, decentralized
-- [ ] **IPFS pinning service chosen** — Pinata / nft.storage / Infura / self-hosted
-- [ ] **Image URI confirmed** — Real `ipfs://...` URI replaces placeholder in metadata
+- [x] **Final artwork format decided** — Lossless transparent PNG (primary source)
+- [x] **Final artwork file prepared** — Master transparent PNG in `collection/artwork/velvet-gremlin-000-founder.png`
+- [x] **Staging & IPFS upload pipeline ready** — `npm run upload:ipfs` tool configured with Pinata & manual modes
+- [ ] **Artwork uploaded to IPFS/Arweave** — Permanent, pinned CID
+- [ ] **Image URI confirmed** — Real `ipfs://...` URI in metadata
 
 ### Metadata
 
@@ -32,7 +32,7 @@
 
 - [x] **Collection contract implemented** — TEP-62 + TEP-66 compliant in Tolk
 - [x] **Item contract implemented** — TEP-62 compliant in Tolk
-- [x] **All Sandbox tests pass** — Full test coverage (16 tests passing) for mint, transfer, royalty, metadata
+- [x] **All Sandbox tests pass** — Full test coverage (20 tests passing) for mint, transfer, royalty, metadata
 - [ ] **Testnet deployment successful** — Contracts verified on testnet explorer
 - [ ] **Getgems testnet verification** — NFT displays correctly with all metadata
 
@@ -83,7 +83,7 @@
 | Architecture plan | ✅ Documented |
 | Testnet plan | ✅ Documented |
 | Creator name | ✅ Set to "Velvet Gremlins" |
-| Smart contracts | ✅ Implemented in Tolk (16 unit tests passing) |
-| IPFS upload | ⏳ Next step |
-| Testnet deployment | ⏳ Pending IPFS assets |
-| Mainnet deployment | 🔒 Blocked until all above complete |
+| Smart contracts | ✅ Implemented in Tolk (20 unit tests passing) |
+| IPFS upload pipeline | ✅ Staged & automation script ready (`npm run upload:ipfs`) |
+| Testnet deployment | ⏳ Ready to deploy upon CID confirmation |
+| Mainnet deployment | 🔒 Blocked until testnet verification complete |

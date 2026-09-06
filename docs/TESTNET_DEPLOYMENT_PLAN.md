@@ -99,57 +99,63 @@ npx blueprint test
 
 ---
 
-## Step 3: Upload Test Metadata
+## Step 3: Decentralized Storage (IPFS) Upload
 
-### 3.1 Prepare Files for Upload
+### 3.1 Automated / Staged IPFS Tool
 
-```
-Upload to IPFS (test):
-├── collection.json              # From collection/metadata/collection.json
-├── velvet-gremlin-000-founder.json  # From collection/metadata/
-└── velvet-gremlin-000-founder.jpg   # From collection/artwork/
-```
+The project includes an IPFS upload tool (`VELVET-GREMLINS/scripts/upload-ipfs.ts`):
 
-### 3.2 Update Metadata URIs
-
-After uploading, replace the `<PLACEHOLDER>` values in the JSON files with actual IPFS URIs:
-
-```json
-{
-  "image": "ipfs://QmXXXXXXXXXXX/velvet-gremlin-000-founder.jpg"
-}
+```bash
+cd VELVET-GREMLINS
+npm run upload:ipfs
 ```
 
-### 3.3 Re-upload Final Metadata
+This stages all mint-ready assets to `dist/ipfs/`:
+```
+dist/ipfs/
+├── artwork/
+│   └── velvet-gremlin-000-founder.png  # Master transparent PNG (2.78 MB)
+└── metadata/
+    ├── collection.json
+    └── velvet-gremlin-000-founder.json
+```
 
-Upload the updated JSON files (with real image URIs) back to IPFS. The collection contract will point to the final JSON URI.
+### 3.2 Pinning to IPFS
+
+- **Option A (Automated)**: Set `PINATA_JWT=...` in `VELVET-GREMLINS/.env` and run `npm run upload:ipfs`. The tool pins the artwork, updates metadata schemas with the returned image CID, pins the metadata directory, and writes the final CIDs directly to `.env`.
+- **Option B (Web UI)**: Upload `dist/ipfs/artwork/` and `dist/ipfs/metadata/` to Pinata/Web3.Storage manually, then sync CIDs using:
+  ```bash
+  npx ts-node scripts/upload-ipfs.ts --set-cids <ARTWORK_CID> <METADATA_FOLDER_CID>
+  ```
 
 ---
 
 ## Step 4: Deploy to Testnet
 
-### 4.1 Configure Wallet
+### 4.1 Configure Environment
 
+Copy `.env.example` to `.env` in `VELVET-GREMLINS/` and set:
 ```bash
-# Set your testnet wallet mnemonic as environment variable
-export WALLET_MNEMONIC="word1 word2 word3 ... word24"
-
-# Or use .env file (ensure it's in .gitignore!)
+NETWORK=testnet
+COLLECTION_METADATA_URI=ipfs://<METADATA_CID>/collection.json
+COMMON_CONTENT_BASE_URI=ipfs://<METADATA_CID>/
+FOUNDER_METADATA_URI=velvet-gremlin-000-founder.json
 ```
 
-### 4.2 Create Deployment Script
+### 4.2 Deployment Scripts
 
 ```
 VELVET-GREMLINS/scripts/
-├── deployCollection.ts          # Deploys the collection contract
-└── mintFounder.ts               # Mints item #0 (Founder)
+├── deploy-collection.ts          # Deploys the collection contract
+├── mint-founder.ts               # Mints item #0 (Founder)
+└── upload-ipfs.ts                # IPFS staging & pinning automation
 ```
 
 ### 4.3 Deploy Collection
 
 ```bash
 cd VELVET-GREMLINS
-npx blueprint run deployCollection --testnet
+npx blueprint run deploy-collection --testnet
 ```
 
 Expected output:
@@ -160,7 +166,7 @@ Expected output:
 ### 4.4 Mint Founder (#000)
 
 ```bash
-npx blueprint run mintFounder --testnet
+npx blueprint run mint-founder --testnet
 ```
 
 Expected output:
