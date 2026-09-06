@@ -308,10 +308,10 @@ The following must be known/decided before the Founder NFT can be minted on main
 
 | Item | Description | Status |
 |---|---|---|
-| **Owner wallet address** | The TON wallet that will deploy the collection and receive the minted Founder NFT | ❓ Not yet provided |
-| **Royalty destination address** | The TON wallet that receives 5% royalties from secondary sales | ❓ Not yet provided (may be same as owner) |
-| **Creator name** | Name/alias to display as creator in metadata | ❓ Placeholder — awaiting input |
-| **Final artwork file** | The definitive artwork to be permanently stored on-chain (ideally PNG with transparency) | ⏳ Current JPEG approved as visual source; PNG upgrade path prepared |
+| **Owner wallet address** | The TON wallet that will deploy the collection and receive the minted Founder NFT | ✅ Defaults to deployer wallet (configurable via .env) |
+| **Royalty destination address** | The TON wallet that receives 5% royalties from secondary sales | ✅ Defaults to deployer wallet (configurable via .env) |
+| **Creator name** | Name/alias to display as creator in metadata | ✅ Confirmed: "Velvet Gremlins" |
+| **Final artwork file** | The definitive artwork to be permanently stored on-chain (ideally PNG with transparency) | ✅ Master transparent PNG prepared in `collection/artwork/` |
 | **Decentralized storage** | Artwork and metadata must be uploaded to IPFS or Arweave and pinned permanently | ⏳ Not yet set up |
 | **IPFS pinning service** | A reliable pinning service (Pinata, Infura, nft.storage, etc.) to ensure permanence | ❓ Not yet chosen |
 

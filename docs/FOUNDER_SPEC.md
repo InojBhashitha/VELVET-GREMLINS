@@ -129,7 +129,7 @@ The following parameters are confirmed for the Founder NFT:
 | **Item Index** | 0 |
 | **Royalty** | 5% (numerator=50, denominator=1000) |
 | **Metadata storage** | Off-chain (IPFS/Arweave — URI TBD) |
-| **Creator** | `<PLACEHOLDER: Awaiting user input>` |
+| **Creator** | Velvet Gremlins |
 | **Marketplace** | Getgems (getgems.io) |
 
 The following will be populated at deployment/mint time with real values:

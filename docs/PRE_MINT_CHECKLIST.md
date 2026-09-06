@@ -24,15 +24,15 @@
 
 ### Identity
 
-- [ ] **Creator/artist name confirmed** — Replaces `<PLACEHOLDER>` in collection metadata
-- [ ] **Owner wallet address confirmed** — The TON wallet deploying the collection
-- [ ] **Royalty destination address confirmed** — Where 5% royalties are sent (may be same as owner)
+- [x] **Creator/artist name confirmed** — Set to "Velvet Gremlins" in collection metadata
+- [x] **Owner wallet address confirmed** — Defaults to deployer wallet (configurable via .env)
+- [x] **Royalty destination address confirmed** — Defaults to deployer wallet (5% royalty, configurable via .env)
 
 ### Smart Contracts
 
-- [ ] **Collection contract implemented** — TEP-62 + TEP-66 compliant
-- [ ] **Item contract implemented** — TEP-62 compliant
-- [ ] **All Sandbox tests pass** — Full coverage of mint, transfer, royalty, metadata
+- [x] **Collection contract implemented** — TEP-62 + TEP-66 compliant in Tolk
+- [x] **Item contract implemented** — TEP-62 compliant in Tolk
+- [x] **All Sandbox tests pass** — Full test coverage (16 tests passing) for mint, transfer, royalty, metadata
 - [ ] **Testnet deployment successful** — Contracts verified on testnet explorer
 - [ ] **Getgems testnet verification** — NFT displays correctly with all metadata
 
@@ -78,12 +78,12 @@
 
 | Category | Progress |
 |---|---|
-| Artwork (current JPEG) | ✅ Preserved and organized |
+| Artwork (lossless master PNG & JPEG archive) | ✅ Preserved and organized |
 | Metadata schemas | ✅ Created and TEP-64 compliant |
 | Architecture plan | ✅ Documented |
 | Testnet plan | ✅ Documented |
-| Creator name | ❓ Awaiting user input |
-| Smart contracts | ⏳ Not yet implemented |
-| IPFS upload | ⏳ Not yet done |
-| Testnet deployment | ⏳ Not yet attempted |
+| Creator name | ✅ Set to "Velvet Gremlins" |
+| Smart contracts | ✅ Implemented in Tolk (16 unit tests passing) |
+| IPFS upload | ⏳ Next step |
+| Testnet deployment | ⏳ Pending IPFS assets |
 | Mainnet deployment | 🔒 Blocked until all above complete |
