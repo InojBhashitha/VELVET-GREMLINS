@@ -12,15 +12,15 @@
 - [x] **Final artwork format decided** — Lossless transparent PNG (primary source)
 - [x] **Final artwork file prepared** — Master transparent PNG in `collection/artwork/velvet-gremlin-000-founder.png`
 - [x] **Staging & IPFS upload pipeline ready** — `npm run upload:ipfs` tool configured with Pinata & manual modes
-- [ ] **Artwork uploaded to IPFS/Arweave** — Permanent, pinned CID
-- [ ] **Image URI confirmed** — Real `ipfs://...` URI in metadata
+- [x] **Artwork uploaded to IPFS/Arweave** — Pinned to Pinata (CID: `bafybeicltd7h7fgjinxctxsg7dffhap77n2eg7v64f7zwtmmotr453mwx4`)
+- [x] **Image URI confirmed** — `ipfs://bafybeicltd7h7fgjinxctxsg7dffhap77n2eg7v64f7zwtmmotr453mwx4` in metadata
 
 ### Metadata
 
-- [ ] **Item metadata finalized** — `velvet-gremlin-000-founder.json` with real image URI
-- [ ] **Collection metadata finalized** — `collection.json` with real image URI and creator name
-- [ ] **Metadata uploaded to IPFS** — Both JSON files pinned permanently
-- [ ] **Metadata URIs confirmed** — Real URIs ready for contract deployment
+- [x] **Item metadata finalized** — `velvet-gremlin-000-founder.json` with real IPFS image URI
+- [x] **Collection metadata finalized** — `collection.json` with real IPFS image URI and creator attribution
+- [x] **Metadata uploaded to IPFS** — Directory pinned to Pinata (CID: `bafybeiblxl4acrhgoqsjmar5irej4dey3krk5j3m7enlwskpq5sul3j2m4`)
+- [x] **Metadata URIs confirmed** — Real URIs ready for contract deployment in `.env`
 
 ### Identity
 
@@ -84,6 +84,6 @@
 | Testnet plan | ✅ Documented |
 | Creator name | ✅ Set to "Velvet Gremlins" |
 | Smart contracts | ✅ Implemented in Tolk (20 unit tests passing) |
-| IPFS upload pipeline | ✅ Staged & automation script ready (`npm run upload:ipfs`) |
-| Testnet deployment | ⏳ Ready to deploy upon CID confirmation |
+| IPFS upload pipeline | ✅ Artwork & metadata pinned to IPFS |
+| Testnet deployment | ⏳ Ready to deploy with Tonkeeper |
 | Mainnet deployment | 🔒 Blocked until testnet verification complete |

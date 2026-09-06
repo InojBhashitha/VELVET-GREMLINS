@@ -1,5 +1,7 @@
 import fs from 'fs';
 import path from 'path';
+import https from 'https';
+import crypto from 'crypto';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -26,6 +28,177 @@ function ensureDirectoryExists(dir: string) {
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
     }
+}
+
+function getAuthHeaders(): Record<string, string> {
+    if (process.env.PINATA_API_KEY && process.env.PINATA_API_SECRET) {
+        return {
+            pinata_api_key: process.env.PINATA_API_KEY,
+            pinata_secret_api_key: process.env.PINATA_API_SECRET,
+        };
+    }
+    if (process.env.PINATA_JWT) {
+        return {
+            Authorization: `Bearer ${process.env.PINATA_JWT}`,
+        };
+    }
+    throw new Error('No Pinata credentials found in .env (expected PINATA_API_KEY / PINATA_API_SECRET or PINATA_JWT)');
+}
+
+function testPinataAuth(): Promise<PinataAuthResponse> {
+    return new Promise((resolve, reject) => {
+        const headers = getAuthHeaders();
+        const req = https.get(
+            'https://api.pinata.cloud/data/testAuthentication',
+            { family: 4, headers },
+            (res) => {
+                let data = '';
+                res.on('data', (c) => (data += c));
+                res.on('end', () => {
+                    if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
+                        resolve(JSON.parse(data));
+                    } else {
+                        reject(new Error(`Pinata auth failed (${res.statusCode}): ${data}`));
+                    }
+                });
+            },
+        );
+        req.on('error', reject);
+    });
+}
+
+function pinFileToPinata(filePath: string, pinataMetadataName: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const fileBuffer = fs.readFileSync(filePath);
+        const fileName = path.basename(filePath);
+        const boundary = '----WebKitFormBoundary' + crypto.randomBytes(16).toString('hex');
+        const authHeaders = getAuthHeaders();
+
+        const metaJson = JSON.stringify({ name: pinataMetadataName });
+        const optsJson = JSON.stringify({ cidVersion: 1 });
+
+        const parts: Buffer[] = [];
+        parts.push(
+            Buffer.from(
+                `--${boundary}\r\nContent-Disposition: form-data; name="pinataMetadata"\r\nContent-Type: application/json\r\n\r\n${metaJson}\r\n`,
+            ),
+        );
+        parts.push(
+            Buffer.from(
+                `--${boundary}\r\nContent-Disposition: form-data; name="pinataOptions"\r\nContent-Type: application/json\r\n\r\n${optsJson}\r\n`,
+            ),
+        );
+        parts.push(
+            Buffer.from(
+                `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${fileName}"\r\nContent-Type: image/png\r\n\r\n`,
+            ),
+        );
+        parts.push(fileBuffer);
+        parts.push(Buffer.from(`\r\n--${boundary}--\r\n`));
+
+        const totalLength = parts.reduce((acc, b) => acc + b.length, 0);
+
+        const req = https.request(
+            'https://api.pinata.cloud/pinning/pinFileToIPFS',
+            {
+                method: 'POST',
+                family: 4,
+                headers: {
+                    ...authHeaders,
+                    'Content-Type': `multipart/form-data; boundary=${boundary}`,
+                    'Content-Length': totalLength,
+                },
+            },
+            (res) => {
+                let data = '';
+                res.on('data', (c) => (data += c));
+                res.on('end', () => {
+                    if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
+                        const json = JSON.parse(data) as PinataPinResponse;
+                        resolve(json.IpfsHash);
+                    } else {
+                        reject(new Error(`Failed to pin file (${res.statusCode}): ${data}`));
+                    }
+                });
+            },
+        );
+
+        req.on('error', reject);
+        for (const p of parts) {
+            req.write(p);
+        }
+        req.end();
+    });
+}
+
+function pinDirectoryToPinata(
+    files: Array<{ relativePath: string; content: string }>,
+    folderName: string,
+): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const boundary = '----WebKitFormBoundary' + crypto.randomBytes(16).toString('hex');
+        const authHeaders = getAuthHeaders();
+
+        const metaJson = JSON.stringify({ name: folderName });
+        const optsJson = JSON.stringify({ cidVersion: 1 });
+
+        const parts: Buffer[] = [];
+        parts.push(
+            Buffer.from(
+                `--${boundary}\r\nContent-Disposition: form-data; name="pinataMetadata"\r\nContent-Type: application/json\r\n\r\n${metaJson}\r\n`,
+            ),
+        );
+        parts.push(
+            Buffer.from(
+                `--${boundary}\r\nContent-Disposition: form-data; name="pinataOptions"\r\nContent-Type: application/json\r\n\r\n${optsJson}\r\n`,
+            ),
+        );
+
+        for (const f of files) {
+            const fileBuf = Buffer.from(f.content, 'utf-8');
+            parts.push(
+                Buffer.from(
+                    `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${folderName}/${f.relativePath}"\r\nContent-Type: application/json\r\n\r\n`,
+                ),
+            );
+            parts.push(fileBuf);
+            parts.push(Buffer.from('\r\n'));
+        }
+
+        parts.push(Buffer.from(`--${boundary}--\r\n`));
+        const totalLength = parts.reduce((acc, b) => acc + b.length, 0);
+
+        const req = https.request(
+            'https://api.pinata.cloud/pinning/pinFileToIPFS',
+            {
+                method: 'POST',
+                family: 4,
+                headers: {
+                    ...authHeaders,
+                    'Content-Type': `multipart/form-data; boundary=${boundary}`,
+                    'Content-Length': totalLength,
+                },
+            },
+            (res) => {
+                let data = '';
+                res.on('data', (c) => (data += c));
+                res.on('end', () => {
+                    if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
+                        const json = JSON.parse(data) as PinataPinResponse;
+                        resolve(json.IpfsHash);
+                    } else {
+                        reject(new Error(`Failed to pin directory (${res.statusCode}): ${data}`));
+                    }
+                });
+            },
+        );
+
+        req.on('error', reject);
+        for (const p of parts) {
+            req.write(p);
+        }
+        req.end();
+    });
 }
 
 function stageLocalFiles(): { artworkPath: string; collectionJsonPath: string; founderJsonPath: string } {
@@ -55,112 +228,6 @@ function stageLocalFiles(): { artworkPath: string; collectionJsonPath: string; f
     };
 }
 
-async function testPinataAuth(jwt: string): Promise<boolean> {
-    try {
-        const res = await fetch('https://api.pinata.cloud/data/testAuthentication', {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${jwt}`,
-            },
-        });
-        if (!res.ok) {
-            const errText = await res.text();
-            console.error(`Pinata authentication failed (${res.status}): ${errText}`);
-            return false;
-        }
-        const data = (await res.json()) as PinataAuthResponse;
-        console.log(`Pinata auth successful: ${data.message}`);
-        return true;
-    } catch (err: any) {
-        console.error(`Error connecting to Pinata API: ${err.message}`);
-        return false;
-    }
-}
-
-async function pinFileToPinata(
-    jwt: string,
-    filePath: string,
-    pinataMetadataName: string,
-    customKeyValues?: Record<string, string>,
-): Promise<string> {
-    const fileBuffer = fs.readFileSync(filePath);
-    const fileName = path.basename(filePath);
-
-    const formData = new FormData();
-    const fileBlob = new Blob([new Uint8Array(fileBuffer)]);
-    formData.append('file', fileBlob, fileName);
-
-    const metadata = {
-        name: pinataMetadataName,
-        keyvalues: customKeyValues || {},
-    };
-    formData.append('pinataMetadata', JSON.stringify(metadata));
-
-    const options = {
-        cidVersion: 1,
-    };
-    formData.append('pinataOptions', JSON.stringify(options));
-
-    const res = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
-        method: 'POST',
-        headers: {
-            Authorization: `Bearer ${jwt}`,
-        },
-        body: formData,
-    });
-
-    if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Failed to pin file ${fileName} to Pinata: ${res.status} - ${errorText}`);
-    }
-
-    const json = (await res.json()) as PinataPinResponse;
-    return json.IpfsHash;
-}
-
-async function pinDirectoryToPinata(
-    jwt: string,
-    files: Array<{ relativePath: string; content: Buffer | string }>,
-    folderName: string,
-    customKeyValues?: Record<string, string>,
-): Promise<string> {
-    const formData = new FormData();
-
-    for (const f of files) {
-        const buf = typeof f.content === 'string' ? Buffer.from(f.content, 'utf-8') : f.content;
-        const blob = new Blob([new Uint8Array(buf)]);
-        // To pin as directory on Pinata, filename in FormData should include folder prefix
-        formData.append('file', blob, `${folderName}/${f.relativePath}`);
-    }
-
-    const metadata = {
-        name: folderName,
-        keyvalues: customKeyValues || {},
-    };
-    formData.append('pinataMetadata', JSON.stringify(metadata));
-
-    const options = {
-        cidVersion: 1,
-    };
-    formData.append('pinataOptions', JSON.stringify(options));
-
-    const res = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
-        method: 'POST',
-        headers: {
-            Authorization: `Bearer ${jwt}`,
-        },
-        body: formData,
-    });
-
-    if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Failed to pin directory ${folderName} to Pinata: ${res.status} - ${errorText}`);
-    }
-
-    const json = (await res.json()) as PinataPinResponse;
-    return json.IpfsHash;
-}
-
 function updateEnvFile(updates: Record<string, string>) {
     const envPath = path.resolve(__dirname, '../.env');
     let envContent = '';
@@ -186,9 +253,8 @@ function updateEnvFile(updates: Record<string, string>) {
     console.log(`Updated environment configuration at: ${envPath}`);
 }
 
-function updateMetadataFiles(artworkCid: string, metadataFolderCid?: string) {
+function updateMetadataFiles(artworkCid: string) {
     const imageUri = `ipfs://${artworkCid}`;
-    const imageGatewayUrl = `https://ipfs.io/ipfs/${artworkCid}`;
 
     // Update Founder item metadata
     const founderData = JSON.parse(fs.readFileSync(founderMetadataFile, 'utf-8'));
@@ -200,7 +266,6 @@ function updateMetadataFiles(artworkCid: string, metadataFolderCid?: string) {
     const collectionData = JSON.parse(fs.readFileSync(collectionMetadataFile, 'utf-8'));
     collectionData.image = imageUri;
     if (collectionData.cover_image && collectionData.cover_image.startsWith('<PLACEHOLDER')) {
-        // Omit or leave empty if not yet available to avoid broken banner queries
         delete collectionData.cover_image;
     }
     fs.writeFileSync(collectionMetadataFile, JSON.stringify(collectionData, null, 2) + '\n', 'utf-8');
@@ -234,13 +299,10 @@ export async function main() {
         }
 
         console.log(`\nManually applying artwork CID: ${artworkCid}`);
+        updateMetadataFiles(artworkCid);
+
         if (metadataFolderCid) {
             console.log(`Applying metadata folder CID: ${metadataFolderCid}`);
-        }
-
-        updateMetadataFiles(artworkCid, metadataFolderCid);
-
-        if (metadataFolderCid) {
             updateEnvFile({
                 COLLECTION_METADATA_URI: `ipfs://${metadataFolderCid}/collection.json`,
                 COMMON_CONTENT_BASE_URI: `ipfs://${metadataFolderCid}/`,
@@ -251,48 +313,26 @@ export async function main() {
         return;
     }
 
-    const pinataJwt = process.env.PINATA_JWT;
+    const hasCreds =
+        (process.env.PINATA_API_KEY && process.env.PINATA_API_SECRET) || process.env.PINATA_JWT;
 
-    if (!pinataJwt) {
-        console.log('\n[INFO] No PINATA_JWT found in environment or .env file.');
-        console.log('\nYou have 2 simple options to finalize IPFS upload:');
-        console.log('\n--- OPTION A: Automated Upload via Pinata API (1 minute) ---');
-        console.log('1. Go to https://app.pinata.cloud/developers/api-keys');
-        console.log('2. Create a free API Key with "pinFileToIPFS" permissions.');
-        console.log('3. Copy your JWT token and set it in your VELVET-GREMLINS/.env:');
-        console.log('   PINATA_JWT=your_jwt_here');
-        console.log('4. Re-run: npm run upload:ipfs');
-        console.log('\n--- OPTION B: Manual Web UI Upload (Drag & Drop) ---');
-        console.log(`1. Upload the artwork file to Pinata / Web3.storage / Lighthouse:`);
-        console.log(`   File: ${staged.artworkPath}`);
-        console.log(`2. Note the generated Artwork CID (e.g. bafybeic...)`);
-        console.log(`3. Run this script to update the metadata files:`);
-        console.log(`   npx ts-node scripts/upload-ipfs.ts --set-cids <ARTWORK_CID>`);
-        console.log(`4. Upload the metadata directory to Pinata:`);
-        console.log(`   Folder: ${distMetadataDir}`);
-        console.log(`5. Link the metadata folder CID:`);
-        console.log(`   npx ts-node scripts/upload-ipfs.ts --set-cids <ARTWORK_CID> <METADATA_FOLDER_CID>`);
-        console.log('=====================================================\n');
+    if (!hasCreds) {
+        console.log('\n[INFO] No Pinata credentials found in environment or .env file.');
         return;
     }
 
     // 2. Automated Pinata Pinning
     console.log('\n[2/3] Authenticating with Pinata...');
-    const authed = await testPinataAuth(pinataJwt);
-    if (!authed) {
-        console.error('Authentication failed. Please verify your PINATA_JWT in .env.');
-        process.exit(1);
-    }
+    const authRes = await testPinataAuth();
+    console.log(`   ${authRes.message}`);
 
     console.log('\n[3/3] Pinning assets to IPFS via Pinata API...');
 
     // Step A: Pin Master Transparent Artwork
     console.log('1. Uploading velvet-gremlin-000-founder.png (2.78 MB)...');
     const artworkCid = await pinFileToPinata(
-        pinataJwt,
         collectionArtworkFile,
         'velvet-gremlin-000-founder.png',
-        { project: 'Velvet Gremlins', role: 'Founder Master Artwork' },
     );
     console.log(`   ✅ Artwork pinned! CID: ${artworkCid}`);
     console.log(`   IPFS URI: ipfs://${artworkCid}`);
@@ -306,19 +346,17 @@ export async function main() {
     const metadataFiles = [
         {
             relativePath: 'collection.json',
-            content: fs.readFileSync(collectionMetadataFile),
+            content: fs.readFileSync(collectionMetadataFile, 'utf-8'),
         },
         {
             relativePath: 'velvet-gremlin-000-founder.json',
-            content: fs.readFileSync(founderMetadataFile),
+            content: fs.readFileSync(founderMetadataFile, 'utf-8'),
         },
     ];
 
     const metadataFolderCid = await pinDirectoryToPinata(
-        pinataJwt,
         metadataFiles,
         'velvet-gremlins-metadata',
-        { project: 'Velvet Gremlins', role: 'Metadata Directory' },
     );
 
     console.log(`   ✅ Metadata directory pinned! CID: ${metadataFolderCid}`);

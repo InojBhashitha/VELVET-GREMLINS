@@ -1,8 +1,8 @@
 {
   "name": "Velvet Gremlin #000 — Founder",
   "description": "The genesis character of the Velvet Gremlins collection. A 1/1 unique Founder piece — a mischievous cosmic creature adorned in royal gold and celestial amethyst, wrapped in a cloak of dark velvet embroidered with constellations. The Founder stands as the origin point and canonical reference for all Velvet Gremlins to follow.",
-  "image": "<PLACEHOLDER: Replace with decentralized storage URI (IPFS/Arweave) before minting — e.g. ipfs://Qm.../velvet-gremlin-000-founder.png>",
-  "content_url": "<PLACEHOLDER: Replace with URI to high-resolution or original artwork file if separate from image>",
+  "image": "ipfs://bafybeicltd7h7fgjinxctxsg7dffhap77n2eg7v64f7zwtmmotr453mwx4",
+  "content_url": "ipfs://bafybeicltd7h7fgjinxctxsg7dffhap77n2eg7v64f7zwtmmotr453mwx4",
   "marketplace": "getgems.io",
   "attributes": [
     {
