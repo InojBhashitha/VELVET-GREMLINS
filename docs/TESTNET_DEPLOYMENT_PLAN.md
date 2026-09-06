@@ -50,12 +50,18 @@ Create a TEP-62 compliant NFT item contract that:
 
 ```
 VELVET-GREMLINS/contracts/
-├── nft_collection.{tact|fc}     # Collection contract
-└── nft_item.{tact|fc}           # Item contract
+├── nft_collection.tolk     # Collection contract
+├── nft_item.tolk           # Item contract
+├── storage.tolk            # Storage structs & helpers
+├── messages.tolk           # Message structs & opcodes
+├── errors.tolk             # Error codes
+└── fees-management.tolk    # Fee constants
 
 VELVET-GREMLINS/wrappers/
-├── NftCollection.ts             # Collection wrapper
-└── NftItem.ts                   # Item wrapper
+├── NftCollection.ts        # Collection wrapper
+├── NftItem.ts              # Item wrapper
+├── NftCollection.compile.ts
+└── NftItem.compile.ts
 ```
 
 ---

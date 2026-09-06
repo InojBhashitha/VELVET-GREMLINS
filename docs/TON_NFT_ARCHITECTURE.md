@@ -261,7 +261,7 @@ Before testnet deployment, the following must be ready:
 
 ### 6.2 Testnet Deployment Steps
 
-1. **Develop contracts** — Implement collection + item contracts in FunC or Tact
+1. **Develop contracts** — Implement collection + item contracts in Tolk
 2. **Write wrappers** — TypeScript wrappers for Blueprint interaction
 3. **Write tests** — Sandbox tests covering:
    - Collection deployment
@@ -285,17 +285,18 @@ npx blueprint run deployCollection --testnet
 # Use a testnet wallet funded via https://t.me/testgiver_ton_bot
 ```
 
-### 6.4 Contract Language Decision
+### 6.4 Smart Contract Language: Tolk
 
-The existing Blueprint scaffold uses **Tolk** (`.tolk` files). However, for the NFT contracts, we have three options:
+The smart contracts are implemented in **Tolk**, the next-generation smart-contract language for TON and official successor to FunC recommended by TON Foundation:
 
-| Language | Pros | Cons |
-|---|---|---|
-| **FunC** | Most reference implementations available, battle-tested | Older, lower-level syntax |
-| **Tact** | Higher-level, better DX, good NFT templates | Newer, fewer examples for edge cases |
-| **Tolk** | Already in scaffold, modern FunC successor | Fewer NFT reference implementations |
+| Property | Tolk Implementation |
+|---|---|
+| **Syntax** | Modern, TypeScript/Rust-inspired syntax with strict typing and compile-time checks |
+| **Compatibility** | Direct TVM optimization with full compatibility for TEP-62, TEP-64, and TEP-66 |
+| **Safety** | Explicit boolean conditions, typed message matching, structured cell serialization |
+| **Tooling** | Native `@ton/tolk-js` compiler integration with TON Blueprint |
 
-**Recommendation:** Use **Tact** for the NFT contracts — it has the best developer experience, first-class NFT support, and solid reference implementations. The existing Tolk scaffold can be replaced or kept alongside.
+**Selection:** **Tolk** is the official language choice for Velvet Gremlins contracts.
 
 ---
 
@@ -364,8 +365,8 @@ The following must be known/decided before the Founder NFT can be minted on main
 
 ## 9. Recommended Next Steps
 
-1. **Decide on contract language** (Tact recommended)
-2. **Implement collection + item contracts** with TEP-62 + TEP-66
+1. **Smart contract language implemented** (Tolk — TEP-62/64/66 compliant)
+2. **Comprehensive tests implemented** (20 passing Sandbox unit tests)
 3. **Write comprehensive Sandbox tests**
 4. **Set up testnet wallet** and fund with test TON
 5. **Upload test metadata** to a temporary location
