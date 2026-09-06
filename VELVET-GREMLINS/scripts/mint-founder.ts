@@ -1,7 +1,10 @@
+import dotenv from 'dotenv';
 import { toNano, Address } from '@ton/core';
 import { NftCollection } from '../wrappers/NftCollection';
 import { NftItem } from '../wrappers/NftItem';
 import { NetworkProvider } from '@ton/blueprint';
+
+dotenv.config();
 
 export async function run(provider: NetworkProvider) {
     const ui = provider.ui();

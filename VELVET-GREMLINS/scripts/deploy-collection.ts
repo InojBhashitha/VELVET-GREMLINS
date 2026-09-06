@@ -1,6 +1,11 @@
+import fs from 'fs';
+import path from 'path';
+import dotenv from 'dotenv';
 import { toNano, Address } from '@ton/core';
 import { NftCollection } from '../wrappers/NftCollection';
 import { compile, NetworkProvider } from '@ton/blueprint';
+
+dotenv.config();
 
 export async function run(provider: NetworkProvider) {
     const ui = provider.ui();
@@ -74,5 +79,17 @@ export async function run(provider: NetworkProvider) {
 
     ui.write('✅ Velvet Gremlins NFT Collection successfully deployed!');
     ui.write(`Collection Address: ${nftCollection.address.toString()}`);
-    ui.write('Save this address to your .env file as COLLECTION_ADDRESS for subsequent minting.');
+
+    const envPath = path.resolve(__dirname, '../.env');
+    if (fs.existsSync(envPath)) {
+        let envContent = fs.readFileSync(envPath, 'utf-8');
+        const regex = /^COLLECTION_ADDRESS=.*$/m;
+        if (regex.test(envContent)) {
+            envContent = envContent.replace(regex, `COLLECTION_ADDRESS=${nftCollection.address.toString()}`);
+        } else {
+            envContent += `\nCOLLECTION_ADDRESS=${nftCollection.address.toString()}`;
+        }
+        fs.writeFileSync(envPath, envContent.trim() + '\n', 'utf-8');
+        ui.write(`Auto-saved COLLECTION_ADDRESS to ${envPath}`);
+    }
 }
