@@ -32,9 +32,8 @@
 
 - [x] **Collection contract implemented** — TEP-62 + TEP-66 compliant in Tolk
 - [x] **Item contract implemented** — TEP-62 compliant in Tolk
-- [x] **All Sandbox tests pass** — Full test coverage (20 tests passing) for mint, transfer, royalty, metadata
-- [ ] **Testnet deployment successful** — Contracts verified on testnet explorer
-- [ ] **Getgems testnet verification** — NFT displays correctly with all metadata
+- [x] **Testnet deployment successful** — Collection `kQAJts2Yl_EYQf5vSig2IQuStxpKzw0PbBooBa1oE7_UJc-b` & Founder `kQDWvVYx4pd5iKGqVNsu-34j1UrilVyfKLbjAu39EfDQa-Xd` deployed
+- [x] **Getgems / Explorer testnet verification** — Verified active on Tonscan, Tonviewer, and Getgems testnet
 
 ### Wallet
 
@@ -85,5 +84,5 @@
 | Creator name | ✅ Set to "Velvet Gremlins" |
 | Smart contracts | ✅ Implemented in Tolk (20 unit tests passing) |
 | IPFS upload pipeline | ✅ Artwork & metadata pinned to IPFS |
-| Testnet deployment | ⏳ Ready to deploy with Tonkeeper |
-| Mainnet deployment | 🔒 Blocked until testnet verification complete |
+| Testnet deployment | ✅ Successfully deployed & Founder #000 minted |
+| Mainnet deployment | 🔒 Blocked until mainnet launch decision |

@@ -1,9 +1,11 @@
+import dns from 'dns';
 import dotenv from 'dotenv';
 import { toNano, Address } from '@ton/core';
 import { NftCollection } from '../wrappers/NftCollection';
 import { NftItem } from '../wrappers/NftItem';
 import { NetworkProvider } from '@ton/blueprint';
 
+dns.setDefaultResultOrder('ipv4first');
 dotenv.config();
 
 export async function run(provider: NetworkProvider) {

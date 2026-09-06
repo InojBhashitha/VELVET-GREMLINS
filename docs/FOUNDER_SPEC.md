@@ -132,20 +132,18 @@ The following parameters are confirmed for the Founder NFT:
 | **Creator** | Velvet Gremlins |
 | **Marketplace** | Getgems (getgems.io) |
 
-The following will be populated at deployment/mint time with real values:
+The following are the confirmed on-chain identifiers (Testnet deployment):
 
 ```
-Token ID:          [Assigned at mint — index 0]
-Collection Address:[Generated at collection deployment]
-Item Address:      [Generated at item mint]
-Owner Address:     [Deployer wallet — to be confirmed]
-Royalty Destination:[To be confirmed — may match owner]
-Mint Date:         [Actual date of mainnet mint]
-Image URI:         [IPFS/Arweave URI after upload]
-Metadata URI:      [IPFS/Arweave URI after upload]
+Token ID:           0
+Collection Address: kQAJts2Yl_EYQf5vSig2IQuStxpKzw0PbBooBa1oE7_UJc-b (EQAJts2Yl_EYQf5vSig2IQuStxpKzw0PbBooBa1oE7_UJXQR)
+Item Address:       kQDWvVYx4pd5iKGqVNsu-34j1UrilVyfKLbjAu39EfDQa-Xd (EQDWvVYx4pd5iKGqVNsu-34j1UrilVyfKLbjAu39EfDQa15X)
+Owner Address:      EQD0Nbhlib-1s1qdjmEyuMpOMAXMBeBomiYr1LjJZGH1cg2I
+Royalty Destination:EQD0Nbhlib-1s1qdjmEyuMpOMAXMBeBomiYr1LjJZGH1cg2I (5%)
+Testnet Mint Date:  2026-09-06
+Image URI:          ipfs://bafybeicltd7h7fgjinxctxsg7dffhap77n2eg7v64f7zwtmmotr453mwx4
+Metadata URI:       ipfs://bafybeiblxl4acrhgoqsjmar5irej4dey3krk5j3m7enlwskpq5sul3j2m4/velvet-gremlin-000-founder.json
 ```
-
-> **Note:** No fake addresses, token IDs, or marketplace links have been generated. All on-chain identifiers will be real values produced during actual deployment.
 
 ---
 
@@ -157,6 +155,7 @@ Metadata URI:      [IPFS/Arweave URI after upload]
 | Artwork generated | Pre-Phase 1 | ✅ Complete |
 | Phase 1 — Project structure & preservation | 2026-09-06 | ✅ Complete |
 | Phase 2 — Architecture & preparation | 2026-09-06 | ✅ Complete |
-| Phase 2 — Contract implementation | TBD | ⏳ Pending |
-| Phase 2 — Testnet deployment & verification | TBD | ⏳ Pending |
-| Phase 3 — Mainnet deployment & minting | TBD | ⏳ Pending |
+| Phase 3 — Tolk Smart Contract implementation | 2026-09-06 | ✅ Complete (20 unit tests) |
+| Phase 3 — Decentralized Storage (IPFS Pinning) | 2026-09-06 | ✅ Complete (Master PNG & metadata pinned) |
+| Phase 3 — Testnet deployment & Founder minting | 2026-09-06 | ✅ Complete (Deployed & Minted) |
+| Phase 4 — Mainnet deployment & minting | TBD | ⏳ Next milestone |
